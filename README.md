@@ -8,6 +8,6 @@ Currently, I'm expanding my skills in **IT products documentation** and seeking 
 
 ## Sample Documents
 - [User Guide](userguide)
-- [Release notes](Releasenotes.md)
+- [Release notes]([Releasenotes.md](https://github.com/Surya-Jaganathan/Technical-writer-resume/blob/b6be61786bc74f3d911b64f684f4958bd6a40885/Releasenotes.md))
 - [Troubleshooting articles](Troubleshooting.md)
 - [SOP/workflow]()
