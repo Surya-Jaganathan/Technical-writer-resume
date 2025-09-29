@@ -1,3 +1,18 @@
+# Table of Content
+<!-- vscode-markdown-toc -->
+* 1. [Experience](#Experience)
+* 2. [EDUCATION](#EDUCATION)
+* 3. [SKILLS](#SKILLS)
+* 4. [CERTIFICATIONS](#CERTIFICATIONS)
+* 5. [Strength](#Strength)
+* 6. [Hobbies](#Hobbies)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
 # Hi I'm Surya J
 
 Welcome to my GitHub Profile
@@ -6,7 +21,7 @@ I'm a **Technical Writer** with 2 years and 4 months of experience in translatin
 
 Currently, I'm expanding my skills in **IT products documentation** and seeking opportunities as a Technical Writer to create impactful user guides, release notes, Knowledge base, and FAQs.
 
-## Experience
+##  1. <a name='Experience'></a>EXPERIENCE
 **Technical Writer | Pathfinder Business Analysis**
 
 -	Converted unstructured data into structured formats using XML in compliance with DITA standards, with the ability to create, revise, and review technical documents based on end-user requirements.
@@ -25,24 +40,24 @@ Currently, I'm expanding my skills in **IT products documentation** and seeking 
   
 - Created flowcharts using MS Visio and Draw.io and used Snagit for illustrations.
 
-## EDUCATION
+##  2. <a name='EDUCATION'></a>EDUCATION
 **NEHRU INSTITUTE OF TECHNOLOGY**
 
 B.E (Aeronautical Engineering) - First class CGPA: 7.1
 
-## SKILLS
+##  3. <a name='SKILLS'></a>SKILLS
 
 **Technical Skills:** Oxygen XML editor, Jira, Snag-IT, Inkscape, MS Visio, Draw.io, Markdown, GitHub, Adobe acrobat, DTD, MS Office,
 SharePoint, DITA XML, HTML, Agile Methodology, DDLC, SDLC, MSTP, Structured and un-structured authoring, CI/CD
 
-## CERTIFICATIONS
+##  4. <a name='CERTIFICATIONS'></a>CERTIFICATIONS
 
 **Technical writing using DITA XML** - Udemy 2024
 
-## Strength
+##  5. <a name='Strength'></a>Strength
 
 Adaptable, Responsible,Versatility, Logical Thinking,Self-motivated
 
-## Hobbies
+##  6. <a name='Hobbies'></a>Hobbies
 
 Music, RC Flying, Cricket, Capturing moments
