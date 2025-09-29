@@ -1,17 +1,17 @@
-# Table of Content
 <!-- vscode-markdown-toc -->
-* 1. [Experience](#Experience)
-* 2. [EDUCATION](#EDUCATION)
-* 3. [SKILLS](#SKILLS)
-* 4. [CERTIFICATIONS](#CERTIFICATIONS)
-* 5. [Strength](#Strength)
-* 6. [Hobbies](#Hobbies)
+* [EXPERIENCE](#EXPERIENCE)
+* [EDUCATION](#EDUCATION)
+* [SKILLS](#SKILLS)
+* [CERTIFICATIONS](#CERTIFICATIONS)
+* [Strength](#Strength)
+* [Hobbies](#Hobbies)
 
 <!-- vscode-markdown-toc-config
 	numbering=true
 	autoSave=true
 	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
+<!-- /vscode-markdown-toc --># Table of Content
+
 
 # Hi I'm Surya J
 
@@ -21,7 +21,7 @@ I'm a **Technical Writer** with 2 years and 4 months of experience in translatin
 
 Currently, I'm expanding my skills in **IT products documentation** and seeking opportunities as a Technical Writer to create impactful user guides, release notes, Knowledge base, and FAQs.
 
-##  1. <a name='Experience'></a>EXPERIENCE
+##  1. <a name='EXPERIENCE'></a>EXPERIENCE
 **Technical Writer | Pathfinder Business Analysis**
 
 -	Converted unstructured data into structured formats using XML in compliance with DITA standards, with the ability to create, revise, and review technical documents based on end-user requirements.
