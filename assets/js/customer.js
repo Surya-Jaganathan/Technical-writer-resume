@@ -1,0 +1,42 @@
+(() => {
+"use strict";
+const { $,escapeHtml,markdownToHtml,getData,loadMarkdownUrl,markdownBaseUrl }=window.DocsHub;
+let data=getData(); data.quickLinks=data.quickLinks||[];
+function manualCard(m){const article=document.createElement("article");article.className="manual-card";article.innerHTML=`<div class="manual-card-top"><span class="doc-icon">▤</span><span class="category">${escapeHtml(m.category||"User manual")}</span></div><h3>${escapeHtml(m.title)}</h3><p>${escapeHtml(m.description||"")}</p><div class="manual-card-foot"><span>${escapeHtml(m.updated||"Manual")}</span><a href="#manual/${encodeURIComponent(m.id)}">Read manual →</a></div>`;return article;}
+function renderManuals(root=$("#manual-grid"),items=data.manuals){root.replaceChildren();if(!items.length){root.innerHTML='<p class="empty">No manuals have been added yet.</p>';return;}items.forEach(m=>root.append(manualCard(m)));}
+function renderQuickLinks(){const root=$("#quick-links-grid");if(!root)return;root.replaceChildren();const links=data.quickLinks||[];if(!links.length){root.innerHTML='<p class="empty">No quick links have been published yet.</p>';return;}links.forEach(q=>{const card=document.createElement("article");card.className="manual-card";card.innerHTML=`<div class="manual-card-top"><span class="doc-icon">↗</span><span class="category">RESOURCE</span></div><h3>${escapeHtml(q.title)}</h3><div class="markdown-body quicklink-description">${markdownToHtml(q.description||"")}</div><div class="manual-card-foot"><span>Quick link</span><a href="${escapeHtml(q.url)}" target="_blank" rel="noopener noreferrer">Open resource ↗</a></div>`;root.append(card);});}
+function renderFaqs(){const root=$("#faq-list");root.replaceChildren();$("#faq-count").textContent=data.faqs.length+" FAQs";if(!data.faqs.length){root.innerHTML='<p class="empty">No FAQs published yet.</p>';return;}data.faqs.forEach(f=>{const d=document.createElement("details");d.className="faq-item";const s=document.createElement("summary");s.textContent=f.question;const a=document.createElement("div");a.className="faq-answer markdown-body";a.innerHTML=markdownToHtml(f.answer);d.append(s,a);root.append(d);});}
+function buildToc(){
+ const body=$("#reader-body"),toc=$("#reader-toc-list");if(!body||!toc)return;
+ const headings=[...body.querySelectorAll("h1,h2,h3,h4,h5,h6")].filter(h=>h.textContent.trim());
+ toc.replaceChildren();
+ if(!headings.length){toc.innerHTML='<li class="toc-empty">No sections found</li>';return;}
+ const used=new Map();headings.forEach((h,i)=>{let base=h.id||h.textContent.toLowerCase().replace(/[^a-z0-9\s-]/g,"").trim().replace(/\s+/g,"-")||`section-${i+1}`;const count=used.get(base)||0;used.set(base,count+1);h.id=count?`${base}-${count+1}`:base;const li=document.createElement("li");li.className=`toc-level-${h.tagName.slice(1)}`;const a=document.createElement("a");a.href="#"+h.id;a.textContent=h.textContent;a.addEventListener("click",e=>{e.preventDefault();h.scrollIntoView({behavior:"smooth",block:"start"});history.replaceState(null,"",`#manual/${encodeURIComponent(data.manuals.find(x=>x.id===decodeURIComponent(location.hash.slice(8)))?.id||"")}/${h.id}`);});li.append(a);toc.append(li);});
+ const tocLinks=[...toc.querySelectorAll("a")];
+ const activate=id=>{tocLinks.forEach(a=>{const active=a.getAttribute("href")==="#"+id;a.classList.toggle("active",active);if(active)a.setAttribute("aria-current","location");else a.removeAttribute("aria-current");});};
+ if("IntersectionObserver" in window){
+   const observer=new IntersectionObserver(entries=>{
+     const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);
+     if(visible.length)activate(visible[0].target.id);
+   },{root:null,rootMargin:"-15% 0px -72% 0px",threshold:[0,1]});
+   headings.forEach(h=>observer.observe(h));
+   activate(headings[0].id);
+ } else {
+   const update=()=>{let current=headings[0];for(const h of headings){if(h.getBoundingClientRect().top<window.innerHeight*.3)current=h;}if(current)activate(current.id);};
+   window.addEventListener("scroll",update,{passive:true});update();
+ }
+}
+function renderReader(id){const m=data.manuals.find(x=>x.id===id);if(!m){location.hash="manuals";return;}const main=document.querySelector("main");main.innerHTML=`<section class="reader-page"><div class="reader-topline"><a class="back-link" href="index.html#manuals">← All documentation</a><span class="reader-breadcrumb">Documentation / ${escapeHtml(m.category||"User manual")}</span></div><div class="reader-layout"><article class="reader"><p class="eyebrow blue">${escapeHtml(m.category||"USER MANUAL")}</p><h1>${escapeHtml(m.title)}</h1><p class="reader-meta">${escapeHtml(m.updated||"")} · User manual</p><div id="reader-body" class="markdown-body"><p class="muted">Loading Markdown…</p></div><hr><p class="muted">Need more help? Contact the support team.</p></article><aside class="reader-toc" aria-label="Table of contents"><div class="toc-title">☷ &nbsp; On this page</div><nav><ol id="reader-toc-list"><li class="toc-empty">Building table of contents…</li></ol></nav></aside></div></section>`;const body=$("#reader-body");const renderMarkdown=md=>{body.innerHTML=markdownToHtml(md,{baseUrl:m.url?markdownBaseUrl(m.url):""});buildToc();};if(m.url){loadMarkdownUrl(m.url).then(renderMarkdown).catch(err=>{body.innerHTML=`<div class="alert alert-error">${escapeHtml(err.message)}</div><p class="muted">The link may be private, incorrect, or unavailable. Contact the documentation administrator.</p>`;$("#reader-toc-list").innerHTML='<li class="toc-empty">Contents unavailable</li>';});}else renderMarkdown(m.markdown||"The manual has no content yet.");}
+
+function runSearch(q){const section=$("#search-results-section"),root=$("#search-results");if(!q.trim()){section.hidden=true;return;}const lower=q.toLowerCase();const manuals=data.manuals.filter(m=>[m.title,m.category,m.description,m.markdown].join(" ").toLowerCase().includes(lower));const faqs=data.faqs.filter(f=>[f.question,f.answer,f.category].join(" ").toLowerCase().includes(lower));$("#search-title").textContent=`Results for “${q}”`;$("#search-count").textContent=(manuals.length+faqs.length)+" result(s)";root.replaceChildren();manuals.forEach(m=>root.append(manualCard(m)));faqs.forEach(f=>{const c=document.createElement("article");c.className="manual-card";c.innerHTML=`<div class="manual-card-top"><span class="doc-icon">?</span><span class="category">FAQ</span></div><h3>${escapeHtml(f.question)}</h3><div class="markdown-body">${markdownToHtml(f.answer)}</div><div class="manual-card-foot"><span>${escapeHtml(f.category||"FAQ")}</span><a href="#faqs">View FAQs →</a></div>`;root.append(c);});if(!manuals.length&&!faqs.length)root.innerHTML='<p class="empty">No matches found. Try a different search term.</p>';section.hidden=false;}
+$("#search-form").addEventListener("submit",e=>{e.preventDefault();runSearch($("#search-input").value);$("#search-results-section").scrollIntoView({behavior:"smooth"});});
+$("#search-input").addEventListener("input",e=>{if(e.target.value.trim().length>1)runSearch(e.target.value);else $("#search-results-section").hidden=true;});
+$("#clear-search").addEventListener("click",()=>{$("#search-input").value="";$("#search-results-section").hidden=true;});
+function renderRoute(){const match=location.hash.match(/^#manual\/(.+)$/);if(match)renderReader(decodeURIComponent(match[1]));else if(!$("#manual-grid"))location.reload();}
+window.addEventListener("hashchange",renderRoute);
+const support=data.settings?.supportEmail||"support@example.com";$("#support-link").href="mailto:"+support;
+renderManuals();renderFaqs();renderQuickLinks();if(location.hash.startsWith("#manual/"))renderRoute();
+async function loadPublishedContent(){try{const response=await fetch("content/docshub.json?ts="+Date.now(),{cache:"no-store"});if(!response.ok)throw Error("Published JSON not found");const published=await response.json();if(!Array.isArray(published.manuals)||!Array.isArray(published.faqs))throw Error("Invalid published JSON");published.quickLinks=Array.isArray(published.quickLinks)?published.quickLinks:[];data=published;renderManuals();renderFaqs();renderQuickLinks();if(location.hash.startsWith("#manual/"))renderRoute();}catch(err){console.warn("Using fallback DocsHub content:",err.message);}}
+loadPublishedContent();
+window.addEventListener("storage",e=>{if(e.key===window.DocsHub.STORE_KEY){data=getData();data.quickLinks=data.quickLinks||[];renderManuals();renderFaqs();renderQuickLinks();}});
+})();
